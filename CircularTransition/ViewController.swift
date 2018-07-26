@@ -5,10 +5,15 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate {
 
     let transition = CircularTransition()
     
+    
     @IBOutlet weak var button: UIButton!
     
+    @IBAction func btnTapped(_ sender: Any) {
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
     
@@ -22,6 +27,7 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate {
         transition.transitionMode = .present
         transition.startingPoint = button.center
         transition.circleColor = button.backgroundColor!
+        transition.button = button
         
         return transition
     }
@@ -30,9 +36,12 @@ class ViewController: UIViewController, UIViewControllerTransitioningDelegate {
         transition.transitionMode = .dismiss
         transition.startingPoint = button.center
         transition.circleColor = button.backgroundColor!
+        transition.button = button
         
         return transition
     }
+    
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

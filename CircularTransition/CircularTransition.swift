@@ -14,6 +14,7 @@ class CircularTransition: NSObject {
     
     var circle = UIView()
     
+    var button = UIButton()
     
     var circleColor = UIColor.white
     
@@ -39,6 +40,7 @@ extension CircularTransition: UIViewControllerAnimatedTransitioning {
         return duration
     }
     
+    // Realiza a animação durante a transição
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
         
@@ -62,15 +64,33 @@ extension CircularTransition: UIViewControllerAnimatedTransitioning {
                 presentedView.alpha = 0
                 containerView.addSubview(presentedView)
                 
-                UIView.animate(withDuration: duration, animations: {
-                    self.circle.transform = CGAffineTransform.identity
-                    presentedView.transform = CGAffineTransform.identity
-                    presentedView.alpha = 1
-                    presentedView.center = viewCenter
+//                UIView.animate(withDuration: duration, animations: {
+//                    self.circle.transform = CGAffineTransform.identity
+//                    presentedView.transform = CGAffineTransform.identity
+//                    presentedView.alpha = 1
+//                    presentedView.center = viewCenter
+//
+//                }) { (success: Bool) in
+//                    transitionContext.completeTransition(success)
+                
+                UIView.animateKeyframes(withDuration: 1.2, delay: 0, options: .calculationModeCubic, animations: {
                     
-                }) { (success: Bool) in
+                    UIView.addKeyframe(withRelativeStartTime: 0.8, relativeDuration: 0.8, animations: {
+                        self.button.frame.origin.x -= 300
+
+                    })
+                    
+                    UIView.addKeyframe(withRelativeStartTime: self.duration, relativeDuration: self.duration, animations: {
+                        self.circle.transform = CGAffineTransform.identity
+                        presentedView.transform = CGAffineTransform.identity
+                        presentedView.alpha = 1
+                        presentedView.center = viewCenter
+                    })
+                    
+                }, completion: { (success: Bool) in
                     transitionContext.completeTransition(success)
-                }
+                })
+                
             }
         }else{
             let transitionModeKey = (transitionMode == .pop) ? UITransitionContextViewKey.to: UITransitionContextViewKey.from
@@ -84,16 +104,44 @@ extension CircularTransition: UIViewControllerAnimatedTransitioning {
                 circle.layer.cornerRadius = circle.frame.size.height/2
                 circle.center = startingPoint
                 
-                UIView.animate(withDuration: duration, animations: {
-                    self.circle.transform = CGAffineTransform(scaleX: 0.001, y: 0.001)
-                    returningView.transform = CGAffineTransform(scaleX: 0.001, y: 0.001)
-                    returningView.center = self.startingPoint
-                    returningView.alpha = 0
+//                UIView.animate(withDuration: duration, animations: {
+//                    self.circle.transform = CGAffineTransform(scaleX: 0.001, y: 0.001)
+//                    returningView.transform = CGAffineTransform(scaleX: 0.001, y: 0.001)
+//                    returningView.center = self.startingPoint
+//                    returningView.alpha = 0
+//
+//                    if self.transitionMode == .pop {
+//                        containerView.insertSubview(returningView, belowSubview: returningView)
+//                        containerView.insertSubview(self.circle, belowSubview: returningView)
+//                    }
+//
+//                }) { (success: Bool) in
+//                    returningView.center = viewCenter
+//                    returningView.removeFromSuperview()
+//
+//                    self.circle.removeFromSuperview()
+//
+//                    transitionContext.completeTransition(success)
+//                }
+                
+                UIView.animateKeyframes(withDuration: 0.9, delay: 0, options: .beginFromCurrentState, animations: {
                     
-                    if self.transitionMode == .pop {
-                        containerView.insertSubview(returningView, belowSubview: returningView)
-                        containerView.insertSubview(self.circle, belowSubview: returningView)
-                    }
+                    UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
+                        self.button.frame.origin.x += 300
+                        
+                    })
+                    
+                    UIView.addKeyframe(withRelativeStartTime: self.duration, relativeDuration: self.duration, animations: {
+                        self.circle.transform = CGAffineTransform(scaleX: 0.001, y: 0.001)
+                        returningView.transform = CGAffineTransform(scaleX: 0.001, y: 0.001)
+                        returningView.center = self.startingPoint
+                        returningView.alpha = 0
+                        
+                        if self.transitionMode == .pop {
+                            containerView.insertSubview(returningView, belowSubview: returningView)
+                            containerView.insertSubview(self.circle, belowSubview: returningView)
+                        }
+                    })
                     
                 }) { (success: Bool) in
                     returningView.center = viewCenter
